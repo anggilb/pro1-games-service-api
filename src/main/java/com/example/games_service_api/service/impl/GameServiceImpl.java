@@ -23,6 +23,13 @@ public class GameServiceImpl implements GameService {
                 .orElseThrow(() -> new RuntimeException("Error creating game"));
     }
 
+    @Override
+    public GameModel getGame(Long gameId) {
+        return Optional.of(gameId)
+                    .flatMap(gameRepository::findById)
+                    .orElseThrow(() -> new RuntimeException("Error couldn't find game by id"));
+    }
+
     private GameModel mapToEntity(GameModel gameRequest) {
         return GameModel.builder()
                 .name(gameRequest.getName())
