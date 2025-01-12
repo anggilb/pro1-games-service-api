@@ -16,4 +16,15 @@ public interface GameApi {
     ResponseEntity<GameModel> getGame(
             @PathVariable Long gameId
     );
+
+    @PutMapping(value = "/{gameId}")
+    ResponseEntity<GameModel> putGame(
+            @PathVariable Long gameId,
+            @RequestBody GameModel gameRequest
+    );
+
+    @DeleteMapping(value = "/{gameId}")
+    void deleteGame(
+            @PathVariable Long gameId
+    );
 }

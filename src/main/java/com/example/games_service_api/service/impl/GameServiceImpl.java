@@ -30,6 +30,31 @@ public class GameServiceImpl implements GameService {
                     .orElseThrow(() -> new RuntimeException("Error couldn't find game by id"));
     }
 
+    @Override
+    public GameModel putGame(Long gameId, GameModel gameRequest) {
+        return gameRepository.findById(gameId)
+                .map(game -> {
+                        game.setName(gameRequest.getName());
+                        return gameRepository.save(game);
+                    }
+                )
+                .orElseThrow(() -> new RuntimeException("Error couldn't edit game by id"));
+    }
+
+    @Override
+    public void deleteGame(Long gameId) {
+        Optional.of(gameId)
+                .map(id -> {
+                        if (gameRepository.existsById(id)) {
+                            gameRepository.deleteById(id);
+                            return true;
+                        } else {
+                            throw new RuntimeException("Error couldn't delete game by id: " + id);
+                        }
+                    }
+                );
+    }
+
     private GameModel mapToEntity(GameModel gameRequest) {
         return GameModel.builder()
                 .name(gameRequest.getName())
