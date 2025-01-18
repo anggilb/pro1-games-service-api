@@ -16,32 +16,4 @@ public class GameModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long gameId;
     private String name;
-
-    // Builder pattern example
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private String name;
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public GameModel build() {
-            GameModel gameModel = new GameModel();
-            gameModel.name = this.name;
-            return gameModel;
-        }
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

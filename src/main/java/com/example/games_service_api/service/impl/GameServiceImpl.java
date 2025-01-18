@@ -31,28 +31,23 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameModel putGame(Long gameId, GameModel gameRequest) {
-        return gameRepository.findById(gameId)
-                .map(game -> {
-                        game.setName(gameRequest.getName());
-                        return gameRepository.save(game);
-                    }
-                )
+    public void putGame(Long gameId, GameModel gameRequest) {
+        gameRepository.findById(gameId)
+                .map(existingGame -> updatedFieldsGame(existingGame, gameRequest))
+                .map(gameRepository::save)
                 .orElseThrow(() -> new RuntimeException("Error couldn't edit game by id"));
+    }
+
+    private GameModel updatedFieldsGame(GameModel existingGame, GameModel gameRequest) {
+        existingGame.setName(gameRequest.getName());
+        return existingGame;
     }
 
     @Override
     public void deleteGame(Long gameId) {
         Optional.of(gameId)
-                .map(id -> {
-                        if (gameRepository.existsById(id)) {
-                            gameRepository.deleteById(id);
-                            return true;
-                        } else {
-                            throw new RuntimeException("Error couldn't delete game by id: " + id);
-                        }
-                    }
-                );
+                .map(this::getGame)
+                .ifPresent(gameRepository::delete);
     }
 
     private GameModel mapToEntity(GameModel gameRequest) {
